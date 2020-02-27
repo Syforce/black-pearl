@@ -1,0 +1,6 @@
+<div class="quiz">
+	<div class="">{{activeQuestion.text}}</div>
+	<ul class="answers">
+		<li class="answer" *ngFor="let item of activeQuestion.answers" (click)="onAnswerClick(item)">{{item.text}}</li>
+	</ul>
+</div>

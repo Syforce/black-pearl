@@ -1,0 +1,10 @@
+:host {
+	position: absolute;
+
+	.character {
+		width: 160px;
+		height: 160px;
+		background-position-x: 0;
+		background-position-y: -10px;
+	}
+}
