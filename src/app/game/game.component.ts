@@ -8,11 +8,13 @@ import { StageComponent } from './stage/stage.component';
 import { AnimationState } from './model/enum/animation-state.enum';
 
 import { Transition } from './model/transition.model';
+import { Tween } from './model/tween.model';
 import { Answer } from '../quiz/model/answer.model';
 
 import { HERO } from './config/hero.config';
 import { GOLEM } from './config/golem.config';
 import { FOREST } from './config/forest.config';
+import { FOX } from './config/fox.config';
 
 @Component({
 	selector: 'game',
@@ -25,6 +27,7 @@ export class GameComponent implements AfterViewInit {
 	public HERO = HERO;
 	public GOLEM = GOLEM;
 	public FOREST = FOREST;
+	public FOX = FOX;
 
 	@ViewChild('hero', { static: true })
 	public hero: CharacterComponent;
@@ -41,17 +44,24 @@ export class GameComponent implements AfterViewInit {
 
 	private transitions: Array<Transition> = new Array<Transition>();
 
+	private tweens: Array<Tween> = new Array<Tween>();
+
 	constructor(gameService: GameService) {
 		this.gameService = gameService;
 
 		this.initListeners();
+		this.init();
 	}
 
 	private init() {
 		setTimeout(() => {
-			for (let i = 0; i < this.transitions.length; i++) {
-				this.transitions[i].nextTick();
-			}
+			// for (let i = 0; i < this.transitions.length; i++) {
+			// 	this.transitions[i].nextTick();
+			// }
+
+			this.tweens.forEach((tween: Tween) => {
+				tween.nextTick();
+			});
 
 			this.init();
 		}, 25);
@@ -62,35 +72,50 @@ export class GameComponent implements AfterViewInit {
 	}
 
 	private animateIntroStage1() {
-		const forestTransition: Transition = new Transition();
-		forestTransition.setElement(this.forest).setState(AnimationState.IDLE)
-			.moveTo(-430, 0, 7000);
+		const tweens: Array<Tween> = new Array<Tween>();
+		const forestTween: Tween = new Tween(this.forest)
+			.setState(AnimationState.IDLE, 1, 0, 1)
+			.moveTo(-650, 0, 5000);
 
-		const heroTransition: Transition = new Transition();
-		heroTransition.setElement(this.hero)
-			.moveTo(230, 100, 7000).setState(AnimationState.WALK, 2, 7000)
-			.setState(AnimationState.IDLE, 1, 1, 7000)
-			// .moveTo(280, 100, 500, 7050).setState(AnimationState.ATTACK, 3, 500, 7050)
-			// .setState(AnimationState.IDLE, 1, 1, 7550)
-			// .moveTo(100, 100, 2000, 9000).setState(AnimationState.WALK_REVERSE, 2, 2000, 9000)
-			// .setState(AnimationState.IDLE, 1, 1, 11000);
+		const heroTween: Tween = new Tween(this.hero)
+			.setState(AnimationState.WALK, 2, 5000)
+			.moveTo(230, 50, 5000)
+			.setState(AnimationState.IDLE, 2, 0, 0, 5000);
 
-		const golemTransition: Transition = new Transition();
-		golemTransition.setElement(this.golem)
-			.setState(AnimationState.IDLE).moveTo(390, 100, 5000, 2000);
+		tweens.push(forestTween);
+		tweens.push(heroTween);
 
-		this.transitions.push(forestTransition);
-		this.transitions.push(heroTransition);
-		this.transitions.push(golemTransition);
+		this.tweens = tweens;
 
-		forestTransition.play();
-		heroTransition.play();
-		golemTransition.play();
-		this.init();
+		// const forestTransition: Transition = new Transition();
+		// forestTransition.setElement(this.forest).setState(AnimationState.IDLE)
+		// 	.moveTo(-430, 0, 7000);
 
-		setTimeout(() => {
-			this.transitions = [];
-		}, 8000);
+		// const heroTransition: Transition = new Transition();
+		// heroTransition.setElement(this.hero)
+		// 	.moveTo(230, 100, 7000).setState(AnimationState.WALK, 2, 7000)
+		// 	.setState(AnimationState.IDLE, 1, 1, 7000)
+		// 	// .moveTo(280, 100, 500, 7050).setState(AnimationState.ATTACK, 3, 500, 7050)
+		// 	// .setState(AnimationState.IDLE, 1, 1, 7550)
+		// 	// .moveTo(100, 100, 2000, 9000).setState(AnimationState.WALK_REVERSE, 2, 2000, 9000)
+		// 	// .setState(AnimationState.IDLE, 1, 1, 11000);
+
+		// const golemTransition: Transition = new Transition();
+		// golemTransition.setElement(this.golem)
+		// 	.setState(AnimationState.IDLE).moveTo(390, 100, 5000, 2000);
+
+		// this.transitions.push(forestTransition);
+		// this.transitions.push(heroTransition);
+		// this.transitions.push(golemTransition);
+
+		// forestTransition.play();
+		// heroTransition.play();
+		// golemTransition.play();
+		// this.init();
+
+		// setTimeout(() => {
+		// 	this.transitions = [];
+		// }, 8000);
 
 
 		// this.stage.pan(7000);
@@ -112,24 +137,34 @@ export class GameComponent implements AfterViewInit {
 	private onAnswerReceived(answer: Answer) {
 		if (answer.correct) {
 			// animate attack
-			const heroTransition: Transition = new Transition();
-			heroTransition.setElement(this.hero)
-				.moveTo(280, 100, 500)
-				.setState(AnimationState.WALK, 1, 500)
-				.setState(AnimationState.ATTACK, 2, 500, 500)
-				.setState(AnimationState.IDLE, 1, 1, 1000)
-				.moveTo(230, 100, 1000, 1500)
-				.setState(AnimationState.WALK_REVERSE, 3, 1000, 1500)
-				.setState(AnimationState.IDLE, 1, 1, 2500)
-				// .moveTo(100, 100, 2000, 9000).setState(AnimationState.WALK_REVERSE, 2, 2000, 9000)
-				// .setState(AnimationState.IDLE, 1, 1, 11000);
+			// const heroTransition: Transition = new Transition();
+			// heroTransition.setElement(this.hero)
+			// 	.moveTo(280, 100, 500)
+			// 	.setState(AnimationState.WALK, 1, 500)
+			// 	.setState(AnimationState.ATTACK, 3, 325, 500)
+			// 	.setState(AnimationState.IDLE, 1, 1, 825)
+			// 	.moveTo(230, 100, 1000, 1100)
+			// 	.setState(AnimationState.WALK_REVERSE, 3, 1000, 1100)
+			// 	.setState(AnimationState.IDLE, 1, 1, 2100)
+			// 	// .moveTo(100, 100, 2000, 9000).setState(AnimationState.WALK_REVERSE, 2, 2000, 9000)
+			// 	// .setState(AnimationState.IDLE, 1, 1, 11000);
 
-			heroTransition.play();
-			this.transitions.push(heroTransition);
-			
-			setTimeout(() => {
-				this.transitions = [];
-			}, 2600)
+			// heroTransition.play();
+			// this.transitions.push(heroTransition);
+
+			const heroTween: Tween = new Tween(this.hero)
+				.moveTo(280, 100, 500)
+				.setState(AnimationState.WALK, 1, 500, 0)
+				.setState(AnimationState.ATTACK, 1, 0, 1, 500)
+				.setState(AnimationState.IDLE, 1, 0, 1, 700)
+
+
+			this.tweens.push(heroTween);
+
+
+			// setTimeout(() => {
+			// 	this.transitions = [];
+			// }, 2600)
 
 		} else {
 			// animate damage

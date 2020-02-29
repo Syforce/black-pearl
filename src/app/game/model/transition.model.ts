@@ -108,7 +108,6 @@ export class Transition {
 					continue;
 				} else if (currentTransitionStage.value.index == currentTransitionStage.value.delayCounter ||
 					(currentTransitionStage.value.delayCounter == 0 && currentTransitionStage.value.index == 1)) {
-						console.log('-----------');
 						this.initAnimation(currentTransitionStage);
 				}
 

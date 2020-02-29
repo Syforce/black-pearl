@@ -45,6 +45,25 @@ export abstract class AnimatedElement implements AfterViewInit {
 		this.updateCurrentPosition();
 	}
 
+	public setState(state: AnimationState): Animation {
+		this.currentState = state;
+		this.updateStateAnimation();
+
+		this.currentPosition = -1;
+
+		return this.currentAnimation;
+	}
+
+	public nextTick() {
+		const style = this.reference.nativeElement.style;
+		this.currentPosition = this.currentPosition >= this.currentAnimation.frames.length - 1 ? 0 : ++this.currentPosition;
+
+		style['background-position-x'] = `${this.currentAnimation.frames[this.currentPosition].x}px`;
+		style['background-position-y'] = `${this.currentAnimation.frames[this.currentPosition].y}px`;
+		style['width'] = `${this.currentAnimation.frames[this.currentPosition].width}px`;
+		style['height'] = `${this.currentAnimation.frames[this.currentPosition].height}px`;
+	}
+
 	public nextStateFrame(state: AnimationState) {
 		const style = this.reference.nativeElement.style;
 
