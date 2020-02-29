@@ -6,7 +6,7 @@ export const FOREST: Character = {
 		frames: [{
 			x: 0,
 			y: 0,
-			width: 1400,
+			width: 2800,
 			height: 350
 		}]
 	},

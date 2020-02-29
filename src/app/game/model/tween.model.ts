@@ -14,9 +14,9 @@ export class Tween {
 		this.element = element;
 	}
 
-	public moveTo(x: number, y: number, time: number): Tween {
+	public moveTo(x: number, y: number, time: number, delay: number = 0): Tween {
 		const tweenElement = new MoveTweenElement(this.element, {
-			x, y, time
+			x, y, time, delay
 		}, this.removeTween.bind(this));
 
 		this.actions.push(tweenElement);
@@ -108,6 +108,7 @@ interface MoveTweenConfig {
 	x: number;
 	y: number;
 	time: number;
+	delay: number;
 }
 
 class MoveTweenElement extends TweenElement {
@@ -119,7 +120,7 @@ class MoveTweenElement extends TweenElement {
 	private currentY: number;
 
 	constructor(element: AnimatedElement, config: MoveTweenConfig, removeTween: Function) {
-		super(TweenType.MOVE, element, removeTween);
+		super(TweenType.MOVE, element, removeTween, config.delay);
 
 		this.destinationX = config.x;
 		this.destinationY = config.y;

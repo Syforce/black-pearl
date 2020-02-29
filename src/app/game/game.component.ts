@@ -75,15 +75,22 @@ export class GameComponent implements AfterViewInit {
 		const tweens: Array<Tween> = new Array<Tween>();
 		const forestTween: Tween = new Tween(this.forest)
 			.setState(AnimationState.IDLE, 1, 0, 1)
-			.moveTo(-650, 0, 5000);
+			.moveTo(-1250, 0, 3000)
+			.moveTo(-1450, 0, 400, 6000)
 
 		const heroTween: Tween = new Tween(this.hero)
-			.setState(AnimationState.WALK, 2, 5000)
-			.moveTo(230, 50, 5000)
-			.setState(AnimationState.IDLE, 2, 0, 0, 5000);
+			.setState(AnimationState.WALK, 2, 3000)
+			.moveTo(230, 50, 3000)
+			.setState(AnimationState.IDLE, 2, 0, 0, 3000)
+			.moveTo(40, 50, 400, 6000)
+
+		const enemyTween: Tween = new Tween(this.golem)
+			.setState(AnimationState.IDLE, 2)
+			.moveTo(500, 50, 400, 6000)
 
 		tweens.push(forestTween);
 		tweens.push(heroTween);
+		tweens.push(enemyTween);
 
 		this.tweens = tweens;
 
